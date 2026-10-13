@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顺通驾校 · 预约详情</title>
+<meta name="theme-color" content="#38a3f5">
+
+<!-- 兜底样式：万一 style.css 没加载成功，页面也不会白屏，依然能看能用 -->
+<style>
+body{margin:0;background:#f2f8ff;color:#22303f;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;line-height:1.7}
+.phone{background:#f6fafe}
+.topbar{background:#0d8be0;color:#fff;text-align:center}
+.content{padding:18px 16px}
+.card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.btn{display:block;width:100%;box-sizing:border-box;height:44px;margin-top:18px;border:0;border-radius:12px;background:#0d8be0;color:#fff;font-size:15px;font-weight:600;line-height:44px;text-align:center;text-decoration:none;cursor:pointer}
+.hidden{display:none!important}
+.tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.tag.warn{background:#fff6e5;color:#c07a00}
+.tag.ok{background:#e6f8f0;color:#1fa26b}
+.tag.danger{background:#ffecec;color:#e04a4a}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f5fa;font-size:13px}
+.row-v{color:#8494a5;text-align:right;max-width:62%}
+.btn.ghost{background:#fff;color:#0d8be0;border:1.5px solid #cfe6fb}
+.btn.cancel{background:#fff0f0;color:#e04a4a;border:1.5px solid #ffdada}
+.detail-box{text-align:center;padding:20px 16px}
+.detail-box .big{font-size:44px;line-height:1}
+.detail-box h2{font-size:20px;margin-top:10px}
+.tip{font-size:13px;color:#8494a5}
+</style>
+
+<link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+
+<div class="phone">
+  <header class="topbar"><a class="back" href="index.html#mine">‹</a>预约详情</header>
+
+  <main class="content content-full">
+    <div class="bk-narrow" id="detail-wrap">
+      <!-- 内容由下面的脚本渲染 -->
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script>
+/* ===================================================================
+   「预约详情」页：读取 bookings，展示状态，可取消预约
+   读取 LocalStorage 全部做了兜底（读不到 / 损坏 / 非数组 → 空数组）
+   =================================================================== */
+var BOOKING_KEY = 'bookings';
+
+/* ---------- 安全工具 ---------- */
+function $(id) { return document.getElementById(id); }
+
+function readBookings() {
+  try {
+    var raw = localStorage.getItem(BOOKING_KEY);
+    var data = raw ? JSON.parse(raw) : [];         // JSON.parse(...) || []
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
+}
+function saveBookings(list) {
+  try { localStorage.setItem(BOOKING_KEY, JSON.stringify(list)); } catch (e) { /* 忽略 */ }
+}
+
+var tipTimer;
+function showToast(msg) {
+  var t = $('toast');
+  if (!t) { return; }
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(function () { t.classList.remove('show'); }, 1900);
+}
+
+/* ---------- 从网址里取订单号：booking-detail.html?id=xxx ---------- */
+function getId() {
+  try {
+    var m = location.search.match(/[?&]id=([^&]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  } catch (e) {
+    return '';
+  }
+}
+
+/* ---------- 状态 → 样式 / 图标 ---------- */
+function statusInfo(s) {
+  if (s === '已确认') { return { cls: 'ok',     icon: '✅', text: '教练已确认，请按时到场' }; }
+  if (s === '已取消') { return { cls: 'danger', icon: '🚫', text: '该预约已取消' }; }
+  return { cls: 'warn',   icon: '⏳', text: '等待驾校确认，通常 1 小时内处理' };
+}
+
+/* ---------- 渲染整页 ---------- */
+function render() {
+  var wrap = $('detail-wrap');
+  if (!wrap) { return; }
+
+  var id = getId();
+  var list = readBookings();                        // ← 安全读取
+  var one = null;
+  for (var i = 0; i < list.length; i++) {
+    if (String(list[i].id) === String(id)) { one = list[i]; break; }
+  }
+
+  // 找不到这条订单：给出友好提示，绝不白屏
+  if (!one) {
+    wrap.innerHTML =
+      '<div class="detail-box">' +
+        '<div class="big">🔍</div>' +
+        '<h2>没有找到这条预约</h2>' +
+        '<p class="tip">可能链接不完整，或数据已被清理</p>' +
+      '</div>' +
+      '<a class="btn" href="booking.html">去预约练车</a>' +
+      '<a class="btn ghost" href="index.html#mine">查看我的预约</a>';
+    return;
+  }
+
+  var st = statusInfo(one.status);
+  var canCancel = (one.status !== '已取消' && one.status !== '已确认');
+
+  wrap.innerHTML =
+    '<div class="detail-box">' +
+      '<div class="big">' + st.icon + '</div>' +
+      '<h2>' + (one.status === '已取消' ? '预约已取消' : '预约成功') + '</h2>' +
+      '<span class="tag ' + st.cls + '">' + (one.status || '待确认') + '</span>' +
+      '<p class="tip">' + st.text + '</p>' +
+    '</div>' +
+
+    '<div class="card">' +
+      '<h4>预约信息</h4>' +
+      '<div class="row"><span class="row-t">教练</span><span class="row-v">' + one.coach + '</span></div>' +
+      '<div class="row"><span class="row-t">日期</span><span class="row-v">' + one.date + '</span></div>' +
+      '<div class="row"><span class="row-t">时间段</span><span class="row-v">' + one.time + '</span></div>' +
+      '<div class="row"><span class="row-t">场地</span><span class="row-v">' + (one.field || '总校场地') + '</span></div>' +
+      '<div class="row"><span class="row-t">提交时间</span><span class="row-v">' + (one.createTime || '-') + '</span></div>' +
+      '<div class="row"><span class="row-t">预约编号</span><span class="row-v">' + one.id + '</span></div>' +
+    '</div>' +
+
+    (canCancel ? '<button class="btn cancel" type="button" id="btn-cancel">取消预约</button>' : '') +
+    '<a class="btn" href="booking.html">再约一次</a>' +
+    '<a class="btn ghost" href="index.html#mine">查看我的预约</a>';
+
+  var btn = $('btn-cancel');
+  if (btn) { btn.addEventListener('click', function () { cancelBooking(id); }); }
+}
+
+/* ---------- 取消预约：把状态改成「已取消」，记录保留 ---------- */
+function cancelBooking(id) {
+  if (!confirm('确定要取消这条预约吗？')) { return; }
+  try {
+    var list = readBookings();
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].id) === String(id)) {
+        list[i].status = '已取消';
+        list[i].cancelTime = new Date().toLocaleString();
+        break;
+      }
+    }
+    saveBookings(list);
+    render();                                   // 重新渲染，按钮消失、标签变红
+    showToast('已取消预约');
+  } catch (e) {
+    showToast('取消失败，请刷新页面重试');
+  }
+}
+
+/* ---------- 初始化（包一层，任何异常都不白屏） ---------- */
+try {
+  render();
+} catch (e) {
+  var w = $('detail-wrap');
+  if (w) {
+    w.innerHTML = '<div class="card"><h4>页面加载出错了</h4>' +
+                  '<p>请返回首页后重试，或点下面按钮重新预约。</p></div>' +
+                  '<a class="btn" href="booking.html">去预约练车</a>';
+  }
+}
+</script>
+</body>
+</html>

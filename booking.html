@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顺通驾校 · 预约练车</title>
+<meta name="theme-color" content="#38a3f5">
+
+<!-- 兜底样式：万一 style.css 没加载成功，页面也不会白屏，依然能看能用 -->
+<style>
+body{margin:0;background:#f2f8ff;color:#22303f;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;line-height:1.7}
+.phone{background:#f6fafe}
+.topbar{background:#0d8be0;color:#fff;text-align:center}
+.content{padding:18px 16px}
+.card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+label{display:block;margin:14px 0 6px;font-size:13px;color:#8494a5}
+input,select,textarea{width:100%;box-sizing:border-box;height:42px;padding:0 12px;border:1px solid #dbe7f3;border-radius:10px;font-family:inherit;font-size:14px}
+.btn{display:block;width:100%;box-sizing:border-box;height:44px;margin-top:18px;border:0;border-radius:12px;background:#0d8be0;color:#fff;font-size:15px;font-weight:600;line-height:44px;text-align:center;text-decoration:none;cursor:pointer}
+.hidden{display:none!important}
+.tip{font-size:13px;color:#8494a5}
+.sbar{display:flex;gap:6px;background:#fff;border-radius:14px;padding:12px 6px;margin-bottom:14px}
+.sbar-item{flex:1;text-align:center;font-size:12px;color:#8494a5}
+.sbar-item i{display:block;width:26px;height:26px;line-height:26px;margin:0 auto 6px;border-radius:50%;background:#eef4fa;font-style:normal;font-weight:700}
+.sbar-item.active i{background:#0d8be0;color:#fff}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.slot{height:42px;font-family:inherit;font-size:13px;border:1px solid #dbe7f3;border-radius:10px;background:#f8fbfe;color:#22303f;cursor:pointer}
+.slot.sel{background:#0d8be0;color:#fff;border-color:transparent}
+.item{display:flex;align-items:center;gap:12px}
+.photo{width:56px;height:56px;border-radius:50%;background:#dfe6ed}
+.card.pick.sel{border:1.5px solid #0d8be0;background:#f4faff}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.btn-row .btn{margin-top:0}
+.btn.ghost{background:#fff;color:#0d8be0;border:1.5px solid #cfe6fb}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f5fa;font-size:13px}
+.row-v{color:#8494a5}
+/* 「场地选择」用的小图标（本页专用，不改公共样式） */
+.pick-ico{flex:0 0 52px;width:52px;height:52px;line-height:52px;text-align:center;font-size:24px;border-radius:16px;background:linear-gradient(135deg,#e2f2ff,#cfe8ff)}
+</style>
+
+<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="access.css?v=1">
+</head>
+<body>
+
+<div class="phone">
+  <header class="topbar"><a class="back" href="index.html">‹</a>预约练车</header>
+
+  <main class="content content-full">
+    <div class="bk-narrow">
+
+      <!-- ===== 横向步骤条（4 步） ===== -->
+      <div class="sbar">
+        <div class="sbar-item active" id="sb1"><i>1</i><span>选择教练</span></div>
+        <div class="sbar-item" id="sb2"><i>2</i><span>选择场地</span></div>
+        <div class="sbar-item" id="sb3"><i>3</i><span>选择时间</span></div>
+        <div class="sbar-item" id="sb4"><i>4</i><span>确认提交</span></div>
+      </div>
+
+      <!-- ===== 第一步：选择教练 ===== -->
+      <section id="step1">
+        <p class="tip">点击教练卡片选中（共 6 位）</p>
+        <div id="coach-box"></div>
+        <button class="btn" type="button" onclick="goStep(2)">下一步</button>
+      </section>
+
+      <!-- ===== 第二步：选择场地 ===== -->
+      <section id="step2" class="hidden">
+        <p class="tip">选择你方便去的练车场地（共 3 个）</p>
+        <div id="field-box"></div>
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep(1)">上一步</button>
+          <button class="btn" type="button" onclick="goStep(3)">下一步</button>
+        </div>
+      </section>
+
+      <!-- ===== 第三步：选择日期与时间段 ===== -->
+      <section id="step3" class="hidden">
+        <div class="card">
+          <label>选择日期 <i style="color:#e04a4a;font-style:normal">*</i></label>
+          <input type="date" id="b-date">
+
+          <label>选择时间段 <i style="color:#e04a4a;font-style:normal">*</i></label>
+          <div class="slots" id="slot-box"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep(2)">上一步</button>
+          <button class="btn" type="button" onclick="goStep(4)">下一步</button>
+        </div>
+      </section>
+
+      <!-- ===== 第四步：确认并提交 ===== -->
+      <section id="step4" class="hidden">
+        <div class="card">
+          <h4>确认预约信息</h4>
+          <div class="row"><span class="row-t">教练</span><span class="row-v" id="c-coach"></span></div>
+          <div class="row"><span class="row-t">场地</span><span class="row-v" id="c-field"></span></div>
+          <div class="row"><span class="row-t">日期</span><span class="row-v" id="c-date"></span></div>
+          <div class="row"><span class="row-t">时间段</span><span class="row-v" id="c-time"></span></div>
+          <div class="row"><span class="row-t">费用</span><span class="row-v">含在学费内，不再收费</span></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn ghost" type="button" onclick="goStep(3)">上一步</button>
+          <button class="btn" type="button" onclick="submitBooking()">提交预约</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script src="access.js?v=1"></script>
+<script>
+/* ===================================================================
+   「预约练车」四步流程：纯前端 + LocalStorage，不依赖任何框架
+   1 选择教练 → 2 选择场地 → 3 选择日期与时段 → 4 确认提交
+   教练 / 场地数据 = 首页「教练团队」「练车场地」里的同一批假数据
+   订单存在浏览器的 bookings 里，和「我的预约」板块共用
+   所有存储读写都做了兜底，读取为空/损坏一律当空数组处理
+   =================================================================== */
+var BOOKING_KEY = 'bookings';
+
+var COACHES = [
+  { name: '张建国', tag: '教龄 10 年 ｜ 科目二、三', avatar: 'avatar-1' },
+  { name: '李 伟',  tag: '教龄 7 年 ｜ 科目二',      avatar: 'avatar-2' },
+  { name: '王 强',  tag: '教龄 12 年 ｜ 科目三',     avatar: 'avatar-3' },
+  { name: '刘 洋',  tag: '教龄 6 年 ｜ 科目二',      avatar: 'avatar-4' },
+  { name: '赵 磊',  tag: '教龄 9 年 ｜ 科目三',      avatar: 'avatar-5' },
+  { name: '孙 浩',  tag: '教龄 5 年 ｜ 科目二、三',  avatar: 'avatar-6' }
+];
+
+var FIELDS = [
+  { name: '总校场地',   icon: '🏟️', info: '幸福路 88 号 ｜ 训练车 12 辆 ｜ 8:00 - 18:00' },
+  { name: '东城分场地', icon: '🅿️', info: '东风大道 200 号 ｜ 训练车 10 辆 ｜ 8:00 - 20:00' },
+  { name: '西关考场',   icon: '🚦', info: '西关街 16 号 ｜ 训练车 6 辆 ｜ 8:00 - 17:30' }
+];
+
+var SLOTS = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '14:00-15:00',
+             '15:00-16:00', '16:00-17:00', '18:00-19:00', '19:00-20:00'];
+
+var picked = { coach: '', field: '', date: '', time: '' };   // 当前选择
+
+/* ---------- 安全工具 ---------- */
+function $(id) { return document.getElementById(id); }
+
+function readBookings() {                          // 安全读取订单列表
+  try {
+    var raw = localStorage.getItem(BOOKING_KEY);
+    var data = raw ? JSON.parse(raw) : [];         // JSON.parse(...) || []
+    return Array.isArray(data) ? data : [];        // 不是数组也兜底成空数组
+  } catch (e) {
+    return [];
+  }
+}
+function saveBookings(list) {
+  try { localStorage.setItem(BOOKING_KEY, JSON.stringify(list)); } catch (e) { /* 忽略 */ }
+}
+
+var tipTimer;
+function showToast(msg) {
+  var t = $('toast');
+  if (!t) { return; }
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(function () { t.classList.remove('show'); }, 1900);
+}
+
+function todayText() {
+  var d = new Date(), p = function (n) { return n < 10 ? '0' + n : n; };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+function nowText() {
+  var d = new Date(), p = function (n) { return n < 10 ? '0' + n : n; };
+  return todayText() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
+/* ---------- 渲染：教练卡片 ---------- */
+function renderCoaches() {
+  var box = $('coach-box');
+  if (!box) { return; }
+  box.innerHTML = COACHES.map(function (c, i) {
+    return '<div class="card item pick' + (picked.coach === c.name ? ' sel' : '') + '" onclick="pickCoach(' + i + ')">' +
+             '<div class="photo ' + c.avatar + '"></div>' +
+             '<div><h4>' + c.name + '</h4><p>' + c.tag + '</p></div>' +
+             '<span class="pick-ok">✓</span>' +
+           '</div>';
+  }).join('');
+}
+
+/* ---------- 渲染：场地卡片 ---------- */
+function renderFields() {
+  var box = $('field-box');
+  if (!box) { return; }
+  box.innerHTML = FIELDS.map(function (f, i) {
+    return '<div class="card item pick' + (picked.field === f.name ? ' sel' : '') + '" onclick="pickField(' + i + ')">' +
+             '<div class="pick-ico">' + f.icon + '</div>' +
+             '<div><h4>' + f.name + '</h4><p>' + f.info + '</p></div>' +
+             '<span class="pick-ok">✓</span>' +
+           '</div>';
+  }).join('');
+}
+
+/* ---------- 渲染：时间段按钮 ---------- */
+function renderSlots() {
+  var box = $('slot-box');
+  if (!box) { return; }
+  box.innerHTML = SLOTS.map(function (s) {
+    return '<button type="button" class="slot' + (picked.time === s ? ' sel' : '') +
+           '" onclick="pickSlot(\'' + s + '\')">' + s + '</button>';
+  }).join('');
+}
+
+/* ---------- 交互：选教练 / 选场地 / 选时段 ---------- */
+function pickCoach(i) {
+  picked.coach = COACHES[i] ? COACHES[i].name : '';
+  renderCoaches();
+}
+
+function pickField(i) {
+  picked.field = FIELDS[i] ? FIELDS[i].name : '';
+  renderFields();
+}
+
+function pickSlot(s) {
+  picked.time = s;
+  renderSlots();
+}
+
+/* ---------- 步骤切换（1 / 2 / 3 / 4） ---------- */
+function goStep(n) {
+  try {
+    if (n === 2 && !picked.coach) { showToast('请先选择教练'); return; }
+    if (n === 3 && !picked.field) { showToast('请先选择场地'); return; }
+    if (n === 4) {
+      var d = $('b-date');
+      picked.date = d ? d.value : '';
+      if (!picked.date) { showToast('请选择日期'); return; }
+      if (!picked.time) { showToast('请选择时间段'); return; }
+      fillConfirm();
+    }
+
+    var i;
+    for (i = 1; i <= 4; i++) {
+      var sec = $('step' + i);
+      if (sec) { sec.classList.toggle('hidden', i !== n); }
+    }
+
+    // 步骤条状态：当前高亮，走过的打勾
+    for (i = 1; i <= 4; i++) {
+      var item = $('sb' + i);
+      if (!item) { continue; }
+      item.classList.toggle('active', i === n);
+      item.classList.toggle('done', i < n);
+      var num = item.querySelector('i');
+      if (num) { num.textContent = (i < n) ? '✓' : String(i); }
+    }
+    window.scrollTo(0, 0);
+  } catch (e) {
+    showToast('操作失败，请刷新重试');
+  }
+}
+
+/* ---------- 第四步：填确认信息 ---------- */
+function fillConfirm() {
+  var a = $('c-coach'), b = $('c-field'), c = $('c-date'), d = $('c-time');
+  if (a) { a.textContent = picked.coach; }
+  if (b) { b.textContent = picked.field; }
+  if (c) { c.textContent = picked.date; }
+  if (d) { d.textContent = picked.time; }
+}
+
+/* ---------- 提交预约：存本地 + 跳详情页 ---------- */
+function submitBooking() {
+  try {
+    var d = $('b-date');
+    picked.date = d ? d.value : picked.date;
+    if (!picked.coach) { showToast('请先选择教练'); goStep(1); return; }
+    if (!picked.field) { showToast('请先选择场地'); goStep(2); return; }
+    if (!picked.date) { showToast('请选择日期'); goStep(3); return; }
+    if (!picked.time) { showToast('请选择时间段'); goStep(3); return; }
+
+    var one = {
+      id: 'bk' + Date.now(),
+      coach: picked.coach,
+      field: picked.field,
+      date: picked.date,
+      time: picked.time,
+      status: '待确认',                 // 待确认 / 已确认 / 已取消
+      createTime: nowText()
+    };
+
+    var list = readBookings();          // ← 安全读取，永不抛错
+    list.push(one);
+    saveBookings(list);
+
+    showToast('预约成功');
+    setTimeout(function () {
+      location.href = 'booking-detail.html?id=' + encodeURIComponent(one.id);
+    }, 450);
+  } catch (e) {
+    showToast('提交失败，请刷新页面重试');
+  }
+}
+
+/* ---------- 未报名时的锁定提示页（门禁） ---------- */
+function showLockScreen() {
+  var wrap = document.querySelector('.bk-narrow');
+  if (!wrap) { return; }
+  wrap.innerHTML =
+    '<div class="card lock-screen">' +
+      '<div class="big">🔒</div>' +
+      '<h2>预约练车暂未解锁</h2>' +
+      '<p>完成报名后，即可预约练车、使用驾考题库。<br>只需填 3 项信息，1 分钟搞定。</p>' +
+      '<span class="steps-tip">报名后本页自动解锁</span>' +
+    '</div>' +
+    '<a class="btn" href="signup.html">去完成报名</a>' +
+    '<a class="btn ghost" href="index.html">返回首页</a>';
+}
+
+/* ---------- 初始化 ---------- */
+(function init() {
+  try {
+    // 门禁：本机没有「报名成功」记录时，预约练车不可使用
+    if (typeof hasSignup === 'function' && !hasSignup()) {
+      showLockScreen();
+      return;
+    }
+
+    renderCoaches();
+    renderFields();
+    renderSlots();
+
+    // 从「教练详情页」点“立即预约该教练”过来时，自动选中那位教练
+    try {
+      var preset = localStorage.getItem('presetCoach') || '';    // ← 兜底成空串
+      if (preset) {
+        for (var i = 0; i < COACHES.length; i++) {
+          if (COACHES[i].name === preset) { picked.coach = preset; break; }
+        }
+        renderCoaches();
+        localStorage.removeItem('presetCoach');
+      }
+    } catch (e) { /* 忽略 */ }
+
+    var d = $('b-date');
+    if (d) {
+      d.value = todayText();            // 默认今天
+      d.min = todayText();              // 不允许选过去的日期
+      d.addEventListener('change', function () { picked.date = d.value; });
+    }
+  } catch (e) { /* 忽略：保证页面不白屏 */ }
+})();
+</script>
+</body>
+</html>

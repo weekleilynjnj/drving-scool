@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顺通驾校 · 预约</title>
+<meta name="theme-color" content="#38a3f5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="access.css?v=1">
+</head>
+<body>
+
+<!-- 页面容器：手机屏幕大小，居中显示 -->
+<div class="phone">
+
+  <!-- ===== 首页 ===== -->
+  <section id="page-home" class="page active">
+    <header class="topbar">顺通驾校</header>
+
+    <main class="content">
+
+      <!-- 1. 自动轮播 Banner（纯 CSS 动画，3 张宣传图自动切换） -->
+      <div class="bannerbox">
+        <div class="slides">
+          <div class="slide slide-1">
+            <div class="slide-text">
+              <h3>春季招生特惠</h3>
+              <p>报名立减 1000 元 · 赠送科目一题库</p>
+            </div>
+          </div>
+          <div class="slide slide-2">
+            <div class="slide-text">
+              <h3>新能源教练车</h3>
+              <p>新到 3 台电车 · 好开好学不熄火</p>
+            </div>
+          </div>
+          <div class="slide slide-3">
+            <div class="slide-text">
+              <h3>随到随学</h3>
+              <p>每天 8:00 - 20:00 · 一人一车专属教学</p>
+            </div>
+          </div>
+          <!-- 第 4 张是第 1 张的副本，用来做无缝循环 -->
+          <div class="slide slide-1">
+            <div class="slide-text">
+              <h3>春季招生特惠</h3>
+              <p>报名立减 1000 元 · 赠送科目一题库</p>
+            </div>
+          </div>
+        </div>
+        <div class="dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div>
+      </div>
+
+      <!-- 2. 金刚区：6 个快捷入口 -->
+      <div class="grid">
+        <a class="grid-item" href="signup.html">
+          <div class="gi-icon gi-1">📝</div><span>我要报名</span>
+        </a>
+        <a class="grid-item" href="booking.html">
+          <div class="gi-icon gi-2">📅</div><span>预约练车</span>
+        </a>
+        <div class="grid-item" onclick="go('coach')">
+          <div class="gi-icon gi-3">🧑‍🏫</div><span>教练团队</span>
+        </div>
+        <div class="grid-item" onclick="go('field')">
+          <div class="gi-icon gi-4">🚗</div><span>练车场地</span>
+        </div>
+        <div class="grid-item" onclick="go('exam')">
+          <div class="gi-icon gi-5">📖</div><span>驾考题库</span>
+        </div>
+        <div class="grid-item" onclick="go('service')">
+          <div class="gi-icon gi-6">🎧</div><span>客服咨询</span>
+        </div>
+      </div>
+
+      <!-- 3. 上下滚动公告 -->
+      <div class="notice">
+        <span class="notice-icon">📢</span>
+        <div class="notice-view">
+          <div class="notice-list">
+            <p>恭喜李同学科目二一把过！</p>
+            <p>五一报名优惠活动进行中，立减 1000 元</p>
+            <p>新到 3 台新能源教练车，练车更省心</p>
+            <p>张教练本周还有 2 个空档可约</p>
+            <p>恭喜李同学科目二一把过！</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 推荐金牌教练（点击进入教练团队页） -->
+      <h4 class="list-title">推荐金牌教练</h4>
+
+      <div class="card coach-rec" onclick="go('coach')">
+        <div class="photo avatar-1"></div>
+        <div class="rec-info">
+          <h4>张建国 教练</h4>
+          <p>教龄 10 年 ｜ 科目二、科目三</p>
+          <p class="rec-meta">⭐ 4.9 分 ｜ 已带学员 320 人</p>
+        </div>
+        <span class="rec-go">›</span>
+      </div>
+
+      <div class="card coach-rec" onclick="go('coach')">
+        <div class="photo avatar-2"></div>
+        <div class="rec-info">
+          <h4>李伟 教练</h4>
+          <p>教龄 7 年 ｜ 科目二</p>
+          <p class="rec-meta">⭐ 4.8 分 ｜ 已带学员 210 人</p>
+        </div>
+        <span class="rec-go">›</span>
+      </div>
+
+      <!-- 5. 数据条 -->
+      <div class="numbers">
+        <div><b>20</b><span>年办学经验</span></div>
+        <div><b>98%</b><span>科目二通过率</span></div>
+        <div><b>1.2万</b><span>学员顺利拿证</span></div>
+      </div>
+
+      <!-- 6. 驾校优势 -->
+      <h4 class="list-title">驾校优势</h4>
+      <div class="card">
+        <div class="adv">
+          <div class="adv-icon">🚘</div>
+          <div>
+            <h4>一人一车</h4>
+            <p>专属教练一对一，不用排队等车</p>
+          </div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">⏰</div>
+          <div>
+            <h4>随到随学</h4>
+            <p>每天 8:00 - 20:00，随时预约练车</p>
+          </div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">🏆</div>
+          <div>
+            <h4>考不过免费重学</h4>
+            <p>包教包会，直到你顺利拿证为止</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="copyright">顺通驾校 · 报名热线 400-888-6666</p>
+    </main>
+  </section>
+
+  <!-- ===== 练车中心（底部「练车」标签） ===== -->
+  <section id="page-train" class="page">
+    <header class="topbar">练车中心</header>
+
+    <main class="content">
+      <div class="card">
+        <h4>科目二 · 学习进度</h4>
+        <p>已完成 8 / 13 课时，加油！</p>
+        <div class="progress"><i style="width:62%"></i></div>
+      </div>
+
+      <h4 class="list-title">练车入口</h4>
+
+      <a class="entry" href="booking.html" style="text-decoration:none;color:inherit">
+        <div class="icon">📅</div>
+        <div>
+          <h3>预约练车</h3>
+          <p>选教练、选时间，立即约车</p>
+        </div>
+      </a>
+
+      <div class="entry" onclick="go('coach')">
+        <div class="icon">🧑‍🏫</div>
+        <div>
+          <h3>教练团队</h3>
+          <p>共 6 位教练可预约</p>
+        </div>
+      </div>
+
+      <div class="entry" onclick="go('field')">
+        <div class="icon">🚗</div>
+        <div>
+          <h3>练车场地</h3>
+          <p>共 3 个场地开放中</p>
+        </div>
+      </div>
+
+      <h4 class="list-title">最近练车记录</h4>
+      <div class="card">
+        <h4>06-10 上午　倒车入库</h4>
+        <p>张建国 教练 ｜ 已完成</p>
+      </div>
+      <div class="card">
+        <h4>06-08 下午　坡道定点</h4>
+        <p>李伟 教练 ｜ 已完成</p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== 教练团队 ===== -->
+  <section id="page-coach" class="page">
+    <header class="topbar"><button class="back" onclick="switchTab('home')">‹</button>教练团队</header>
+
+    <main class="content">
+      <p class="tip">共 6 位教练，全部支持线上预约</p>
+
+      <a class="card item" href="coach-detail.html?id=1" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-1"></div>
+        <div>
+          <h4>张建国 教练</h4>
+          <p>教龄 10 年 ｜ 擅长：科目二、科目三</p>
+          <span class="tag ok">本月可约</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+
+      <a class="card item" href="coach-detail.html?id=2" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-2"></div>
+        <div>
+          <h4>李伟 教练</h4>
+          <p>教龄 7 年 ｜ 擅长：科目二</p>
+          <span class="tag ok">本月可约</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+
+      <a class="card item" href="coach-detail.html?id=3" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-3"></div>
+        <div>
+          <h4>王强 教练</h4>
+          <p>教龄 12 年 ｜ 擅长：科目三</p>
+          <span class="tag warn">名额紧张</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+
+      <a class="card item" href="coach-detail.html?id=4" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-4"></div>
+        <div>
+          <h4>刘洋 教练</h4>
+          <p>教龄 6 年 ｜ 擅长：科目二</p>
+          <span class="tag ok">本月可约</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+
+      <a class="card item" href="coach-detail.html?id=5" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-5"></div>
+        <div>
+          <h4>赵磊 教练</h4>
+          <p>教龄 9 年 ｜ 擅长：科目三</p>
+          <span class="tag ok">本月可约</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+
+      <a class="card item" href="coach-detail.html?id=6" style="text-decoration:none;color:inherit">
+        <div class="photo avatar-6"></div>
+        <div>
+          <h4>孙浩 教练</h4>
+          <p>教龄 5 年 ｜ 擅长：科目二、科目三</p>
+          <span class="tag warn">名额紧张</span>
+        </div>
+        <span class="rec-go">›</span>
+      </a>
+    </main>
+  </section>
+
+  <!-- ===== 练车场地 ===== -->
+  <section id="page-field" class="page">
+    <header class="topbar"><button class="back" onclick="switchTab('home')">‹</button>练车场地</header>
+
+    <main class="content">
+      <p class="tip">3 个场地全年开放，可就近选择</p>
+
+      <div class="card">
+        <div class="banner field-1"></div>
+        <h4>总校场地</h4>
+        <p>幸福路 88 号 ｜ 训练车 12 辆 ｜ 8:00 - 18:00</p>
+      </div>
+
+      <div class="card">
+        <div class="banner field-2"></div>
+        <h4>东城分场地</h4>
+        <p>东风大道 200 号 ｜ 训练车 10 辆 ｜ 8:00 - 20:00</p>
+      </div>
+
+      <div class="card">
+        <div class="banner field-3"></div>
+        <h4>西关考场</h4>
+        <p>西关街 16 号 ｜ 训练车 6 辆 ｜ 8:00 - 17:30</p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== 我要报名 ===== -->
+  <section id="page-enroll" class="page">
+    <header class="topbar"><button class="back" onclick="switchTab('home')">‹</button>我要报名</header>
+
+    <main class="content">
+      <p class="tip">选择适合你的班型，线上报名立减 200 元</p>
+
+      <div class="card">
+        <div class="plan-head">
+          <h4>C1 手动挡标准班</h4>
+          <span class="price">¥3800<small>起</small></span>
+        </div>
+        <p>62 课时 ｜ 一人一车 ｜ 含科目一至科目四考试费</p>
+        <span class="tag ok">最热门</span>
+      </div>
+
+      <div class="card">
+        <div class="plan-head">
+          <h4>C2 自动挡标准班</h4>
+          <span class="price">¥4200<small>起</small></span>
+        </div>
+        <p>58 课时 ｜ 一人一车 ｜ 含科目一至科目四考试费</p>
+        <span class="tag ok">好上手</span>
+      </div>
+
+      <div class="card">
+        <div class="plan-head">
+          <h4>VIP 快班</h4>
+          <span class="price">¥6800<small>起</small></span>
+        </div>
+        <p>不限课时 ｜ 专车专教 ｜ 最快 45 天拿证 ｜ 考不过免费重学</p>
+        <span class="tag warn">名额有限</span>
+      </div>
+
+      <h4 class="list-title">报名流程</h4>
+      <div class="card">
+        <div class="adv">
+          <div class="adv-icon">1️⃣</div>
+          <div><h4>在线选班型</h4><p>选择 C1 / C2 / VIP 快班</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">2️⃣</div>
+          <div><h4>提交报名资料</h4><p>身份证 + 照片 + 体检表</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">3️⃣</div>
+          <div><h4>到校缴费签约</h4><p>签订培训合同，当天即可约车</p></div>
+        </div>
+      </div>
+
+      <h4 class="list-title">需要准备的资料</h4>
+      <div class="card">
+        <div class="row"><span class="row-t">身份证原件及复印件</span><span class="row-v">2 份</span></div>
+        <div class="row"><span class="row-t">一寸白底免冠照片</span><span class="row-v">8 张</span></div>
+        <div class="row"><span class="row-t">体检表</span><span class="row-v">可到校免费体检</span></div>
+      </div>
+
+      <a class="btn" href="signup.html">立即报名</a>
+    </main>
+  </section>
+
+  <!-- ===== 驾考题库 ===== -->
+  <section id="page-exam" class="page">
+    <header class="topbar"><button class="back" onclick="switchTab('home')">‹</button>驾考题库</header>
+
+    <main class="content">
+      <p class="tip">科目一 + 科目四 共 1580 题，实时同步官方题库</p>
+
+      <div class="card">
+        <h4>科目一 · 练习进度</h4>
+        <p>已练 930 / 1500 题，正确率 94%</p>
+        <div class="progress"><i style="width:62%"></i></div>
+      </div>
+
+      <h4 class="list-title">分类练习</h4>
+      <div class="card">
+        <div class="row" onclick="showToast('进入「交通标志」练习（演示）')">
+          <span class="row-t">🚸 交通标志与标线</span><span class="row-v">500 题 ›</span>
+        </div>
+        <div class="row" onclick="showToast('进入「灯光信号」练习（演示）')">
+          <span class="row-t">💡 灯光信号使用</span><span class="row-v">120 题 ›</span>
+        </div>
+        <div class="row" onclick="showToast('进入「安全文明驾驶」练习（演示）')">
+          <span class="row-t">🛡️ 安全文明驾驶</span><span class="row-v">260 题 ›</span>
+        </div>
+        <div class="row" onclick="showToast('进入「违法行为判断」练习（演示）')">
+          <span class="row-t">⚖️ 违法行为判断</span><span class="row-v">300 题 ›</span>
+        </div>
+      </div>
+
+      <h4 class="list-title">我的模拟考试成绩</h4>
+      <div class="card">
+        <div class="row"><span class="row-t">06-11 模拟考</span><span class="row-v" style="color:#1fa26b">95 分 · 通过</span></div>
+        <div class="row"><span class="row-t">06-09 模拟考</span><span class="row-v" style="color:#e04a4a">88 分 · 未通过</span></div>
+        <div class="row"><span class="row-t">06-07 模拟考</span><span class="row-v" style="color:#1fa26b">91 分 · 通过</span></div>
+      </div>
+
+      <button class="btn" onclick="showToast('模拟考试开始（演示）')">开始模拟考试</button>
+    </main>
+  </section>
+
+  <!-- ===== 客服咨询 ===== -->
+  <section id="page-service" class="page">
+    <header class="topbar"><button class="back" onclick="switchTab('home')">‹</button>客服咨询</header>
+
+    <main class="content">
+      <p class="tip">有问题随时找我们，客服 9:00 - 21:00 在线</p>
+
+      <h4 class="list-title">联系方式</h4>
+      <div class="card">
+        <div class="adv">
+          <div class="adv-icon">💬</div>
+          <div><h4>在线客服</h4><p>点击下方按钮，客服小顺为您解答</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">📞</div>
+          <div><h4>400-888-6666</h4><p>报名咨询热线，工作日 8:30 - 18:00</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">🏢</div>
+          <div><h4>到校咨询</h4><p>幸福路 88 号 顺通驾校总校大厅</p></div>
+        </div>
+      </div>
+
+      <h4 class="list-title">常见问题</h4>
+      <div class="card">
+        <div class="adv">
+          <div class="adv-icon">❓</div>
+          <div><h4>报名需要什么材料？</h4><p>身份证原件及复印件 2 份、一寸白底照片 8 张、体检表（可到校体检）</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">❓</div>
+          <div><h4>多久能拿到驾照？</h4><p>普通班 60 - 75 天，VIP 快班最快 45 天</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">❓</div>
+          <div><h4>学不会可以退费吗？</h4><p>科目一未通过可申请全额退费，已产生的考试费除外</p></div>
+        </div>
+        <div class="adv">
+          <div class="adv-icon">❓</div>
+          <div><h4>可以换教练吗？</h4><p>可以，在「我的」页面取消预约后重新选择教练即可，不收取费用</p></div>
+        </div>
+      </div>
+
+      <button class="btn" onclick="showToast('客服小顺已收到你的消息')">联系在线客服</button>
+    </main>
+  </section>
+
+  <!-- ===== 我的 ===== -->
+  <section id="page-mine" class="page">
+    <header class="topbar">我的</header>
+
+    <main class="content">
+      <div class="card profile">
+        <div class="photo avatar-mine"></div>
+        <div>
+          <h4>李小明</h4>
+          <p>138****8888 ｜ 科目二 ｜ 剩余 5 课时</p>
+        </div>
+      </div>
+
+      <h4 class="list-title">我的预约</h4>
+      <div id="booking-list"></div>
+
+      <h4 class="list-title">我的报名</h4>
+      <div id="signup-list"></div>
+
+      <div class="card"><p>设置</p></div>
+    </main>
+  </section>
+
+  <!-- ===== 底部导航栏：首页 / 练车 / 我的 ===== -->
+  <nav class="tabbar">
+    <button id="tab-home" class="tab active" onclick="switchTab('home')"><span>🏁</span>首页</button>
+    <button id="tab-train" class="tab" onclick="switchTab('train')"><span>🚗</span>练车</button>
+    <button id="tab-mine" class="tab" onclick="switchTab('mine')"><span>🎓</span>我的</button>
+  </nav>
+
+  <!-- 提示弹窗（淡入淡出，文字由 app.js 控制） -->
+  <div id="toast" class="toast"></div>
+
+</div>
+
+<script src="app.js?v=5"></script>
+<script src="access.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* ===================================================================
+   access.css —— 功能门禁样式（新增文件，不改动公共 style.css）
+   用途：未报名时，「预约练车」「驾考题库」两个入口显示为锁定状态
+   =================================================================== */
+
+/* ---- 锁定的入口 ---- */
+.is-locked {
+  position: relative;
+  opacity: .62;
+  filter: grayscale(58%);
+  cursor: not-allowed;
+}
+.is-locked::after {
+  content: "🔒";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 9px;
+  background: rgba(31, 78, 121, .09);
+}
+/* 金刚区的小格子，锁标贴到角上 */
+.grid-item.is-locked::after {
+  top: 2px;
+  right: 4px;
+  padding: 2px 4px;
+  font-size: 11px;
+  background: transparent;
+}
+/* 锁定时不要再有漂浮/悬停动效，避免误以为可点 */
+.is-locked .icon,
+.is-locked .gi-icon { animation: none; }
+.is-locked:hover { transform: none; box-shadow: 0 6px 18px rgba(31, 78, 121, .07); }
+
+/* 「完成报名后解锁」这行提示文字 */
+.lock-hint { color: #e04a4a !important; font-weight: 600; }
+
+/* ---- 进入被锁页面时的整屏提示 ---- */
+.lock-screen { padding: 32px 22px 26px; text-align: center; }
+.lock-screen .big { font-size: 48px; line-height: 1; }
+.lock-screen h2 { margin-top: 14px; font-size: 20px; letter-spacing: 1.5px; }
+.lock-screen p { margin-top: 10px; font-size: 13px; color: #8494a5; line-height: 1.95; }
+.lock-screen .steps-tip {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #0d8be0;
+  background: #e8f4fe;
+  border: 1px solid #d5eafc;
+  border-radius: 20px;
+}

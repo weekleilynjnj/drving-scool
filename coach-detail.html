@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顺通驾校 · 教练详情</title>
+<meta name="theme-color" content="#38a3f5">
+
+<!-- 兜底样式：万一公共 style.css 或 coach-detail.css 没加载成功，也不会白屏 -->
+<style>
+body{margin:0;background:#f2f8ff;color:#22303f;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;line-height:1.7}
+.phone{background:#f6fafe}
+.topbar{background:#0d8be0;color:#fff;text-align:center}
+.content{padding:18px 16px}
+.card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.photo{width:106px;height:106px;border-radius:50%;background:#dfe6ed}
+.btn,.cd-book{display:block;width:100%;box-sizing:border-box;height:52px;margin-top:20px;border:0;border-radius:16px;
+  background:#0d8be0;color:#fff;font-size:16px;font-weight:600;line-height:52px;text-align:center;text-decoration:none;cursor:pointer}
+.tip{font-size:13px;color:#8494a5}
+.cd-head{background:#0d8be0;color:#fff;border-radius:18px;padding:22px;text-align:center}
+.cd-stars{color:#ffe08a;font-size:19px;margin-top:10px}
+</style>
+
+<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="coach-detail.css">
+<link rel="stylesheet" href="access.css?v=1">
+</head>
+<body>
+
+<div class="phone">
+  <header class="topbar"><a class="back" href="index.html">‹</a>教练详情</header>
+
+  <main class="content content-full">
+    <!-- 内容全部由 coach-detail.js 渲染 -->
+    <div class="cd-narrow" id="cd-root"></div>
+  </main>
+</div>
+
+<script src="coach-detail.js"></script>
+<script src="access.js?v=1"></script>
+</body>
+</html>

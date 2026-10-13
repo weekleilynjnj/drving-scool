@@ -1,0 +1,161 @@
+/* ===================================================================
+   coach-detail.css —— 只服务于「教练详情页」coach-detail.html
+   独立文件，不修改任何公共样式（style.css 一行未动）
+   页面里先引 style.css（共用天蓝主题和卡片基础样式），再引本文件做补充
+   =================================================================== */
+
+/* ---- 1. 顶部教练名片 ---- */
+.cd-head {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 26px 20px 24px;
+  text-align: center;
+  color: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #38a3f5 0%, #0d8be0 100%);
+  box-shadow: 0 14px 30px rgba(13, 139, 224, .28);
+}
+.cd-head::after {
+  content: "";
+  position: absolute;
+  right: -34px;
+  top: -34px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+}
+.cd-head::before {
+  content: "";
+  position: absolute;
+  left: -40px;
+  bottom: -50px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+}
+
+/* 大头像（复用 style.css 里的 .photo + .avatar-N 图片，只改尺寸） */
+.cd-avatar {
+  position: relative;
+  z-index: 1;
+  width: 106px;
+  height: 106px;
+  flex: 0 0 106px;
+  margin: 0 auto 14px;
+  border: 4px solid rgba(255, 255, 255, .88);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .18);
+}
+.cd-head h2 {
+  position: relative;
+  z-index: 1;
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+.cd-meta {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  font-size: 13px;
+  letter-spacing: .5px;
+  opacity: .95;
+}
+.cd-stars {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: #ffe08a;
+}
+.cd-stars b {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: .5px;
+}
+
+/* ---- 2. 简介 + 小标签 ---- */
+.cd-intro { font-size: 13.5px; color: #5a6b7c; line-height: 1.95; }
+.cd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.cd-chip {
+  padding: 5px 13px;
+  font-size: 12px;
+  border-radius: 20px;
+  color: #0d8be0;
+  background: #e8f4fe;
+  border: 1px solid #d5eafc;
+}
+
+/* 近期预约人数（读取浏览器本地的预约数据） */
+.cd-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #0d8be0;
+  background: #f4faff;
+  border: 1px dashed #cfe6fb;
+  border-radius: 14px;
+}
+
+/* ---- 3. 学员评价 ---- */
+.rv {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f5fa;
+}
+.rv:first-of-type { padding-top: 0; }
+.rv:last-child { padding-bottom: 0; border-bottom: 0; }
+
+.rv-face {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 14px rgba(13, 139, 224, .2);
+}
+.rv-face.c1 { background: linear-gradient(135deg, #38a3f5 0%, #0d8be0 100%); }
+.rv-face.c2 { background: linear-gradient(135deg, #34c38f 0%, #1a9c6c 100%); }
+.rv-face.c3 { background: linear-gradient(135deg, #f7b955 0%, #e08b00 100%); }
+
+.rv-body { flex: 1; min-width: 0; }
+.rv-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rv-top b { font-size: 14px; letter-spacing: .5px; }
+.rv-star { font-size: 12.5px; letter-spacing: 2px; color: #f5a623; }
+.rv-body p { margin-top: 5px; font-size: 13px; color: #5a6b7c; line-height: 1.85; }
+
+/* ---- 4. 底部大按钮 ---- */
+.cd-book {
+  display: block;
+  height: 54px;
+  margin-top: 22px;
+  line-height: 54px;
+  font-size: 16.5px;
+  letter-spacing: 2px;
+  border-radius: 16px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 14px 28px rgba(13, 139, 224, .3);
+}
+
+/* ---- 5. 找不到教练时的兜底排版 ---- */
+.cd-404 { padding: 26px 18px; text-align: center; }
+.cd-404 .big { font-size: 46px; line-height: 1; }
+.cd-404 h2 { margin-top: 12px; font-size: 19px; letter-spacing: 1px; }
+.cd-404 p { margin-top: 8px; font-size: 13px; color: #8494a5; }
+
+/* ---- 6. 宽屏（>=768px）时收窄居中，和驿站内其它页面保持一致 ---- */
+@media (min-width: 768px) {
+  .cd-narrow { max-width: 760px; margin: 0 auto; }
+}

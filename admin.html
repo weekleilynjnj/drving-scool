@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顺通驾校 · 管理后台</title>
+<meta name="theme-color" content="#38a3f5">
+<link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="admin-head">
+    <div class="admin-bar">
+      <span class="admin-tag">🔒 仅驾校负责人使用 · 不在小程序界面中出现</span>
+      <a class="admin-back" href="index.html">← 返回前台预约页</a>
+    </div>
+    <h1>顺通驾校 · 管理后台</h1>
+    <p>订单数据来自浏览器本地存储（LocalStorage），与前台「预约练车」页面共用同一份数据</p>
+  </header>
+
+  <!-- 数据统计 -->
+  <div class="stats">
+    <div class="stat">
+      <span class="num" id="s-total">0</span>
+      <span class="label">总预约数</span>
+    </div>
+    <div class="stat">
+      <span class="num" id="s-today">0</span>
+      <span class="label">今日预约数</span>
+    </div>
+    <div class="stat">
+      <span class="num warn" id="s-pending">0</span>
+      <span class="label">待处理预约数</span>
+    </div>
+    <div class="stat">
+      <span class="num ok" id="s-done">0</span>
+      <span class="label">已确认数</span>
+    </div>
+  </div>
+
+  <!-- 预约表格 -->
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>教练</th>
+        <th>日期</th>
+        <th>时间段</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+var KEY = 'orders';
+
+function getOrders() {
+  return JSON.parse(localStorage.getItem(KEY) || '[]');
+}
+function saveOrders(list) {
+  localStorage.setItem(KEY, JSON.stringify(list));
+}
+
+function render() {
+  var list = getOrders();
+  var today = new Date().toISOString().slice(0, 10); // 2025-06-12 格式
+
+  // 顶部统计
+  document.getElementById('s-total').textContent = list.length;
+  document.getElementById('s-today').textContent =
+    list.filter(function (o) { return o.date === today; }).length;
+  document.getElementById('s-pending').textContent =
+    list.filter(function (o) { return o.status !== '已确认'; }).length;
+  document.getElementById('s-done').textContent =
+    list.filter(function (o) { return o.status === '已确认'; }).length;
+
+  // 表格内容
+  var tbody = document.getElementById('tbody');
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">暂无预约数据，请先到前台「预约练车」提交一条</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = list.map(function (o, i) {
+    var done = o.status === '已确认';
+    return '<tr>' +
+      '<td>' + (o.name || '李小明') + '</td>' +
+      '<td>' + o.coach + '</td>' +
+      '<td>' + o.date + '</td>' +
+      '<td>' + o.time + '</td>' +
+      '<td><span class="tag ' + (done ? 'ok' : 'warn') + '">' + (done ? '已确认' : '待处理') + '</span></td>' +
+      '<td>' + (done
+        ? '<span class="muted">—</span>'
+        : '<button class="btn small" onclick="confirmOrder(' + i + ')">确认接单</button>') +
+      '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function confirmOrder(i) {
+  var list = getOrders();
+  list[i].status = '已确认';
+  saveOrders(list);
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
